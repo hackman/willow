@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+
+<title> Willow network tools </title>
+
+<style>
+body { background: #f1f1f1; font-family: Tahoma, Verdana, Arial; font-size: 12px; padding: 0; margin: 0; color: #000; text-align: center; }
+a { color: #05a8de; }
+h2 { text-align: center; }
+#tools { width:80%; text-align: center;  }
+</style>
+
+<script src="http://code.jquery.com/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+var json_data = null;
+var url = "api.pl?";
+
+function get_data() {
+	var sPageURL = window.location.search.substring(1);
+    $.ajax({
+        'async': false,
+        'global': false,
+        'url': url + sPageURL,
+        'dataType': "json",
+        'success': function (data) {
+			json_data = data;
+        }
+    });
+}
+
+function do_cmd(cmd,host) {
+	// verify host or IP
+	$.ajax({
+        'async': false,
+        'global': false,
+        'url': url + 'cmd=' + cmd + '&host=' + host,
+        'dataType': 'html',
+        'success': function (data) {
+			$('#results').html(data);
+        }
+	});
+}
+
+function handle_net(event) {
+    event.preventDefault();
+	console.log('testing ' +  $('#host').val() );
+	host = $('#host').val;
+	cmd  = $('#tool').val;
+	if ($('#host').val !== '') {
+		$('#results').html('<img src="img/progress.gif" alt="Progress">');
+		do_cmd(cmd,host);
+	}
+}
+
+function init_focus() {
+	$('#host').focusout(function() { if ($('#host').val() === '') $('#host').val('IP or Host') });
+	$('#host').focus(function() { $('#host').val('') });
+}
+
+$(document).ready(function(){
+	init_focus();
+	$('#exec').on('submit', function(e) { handle_net(e) });
+});
+
+	
+</script>
+</head>
+<body>
+<h2> Willow network tools </h2>
+<hr />
+<form id=exec>
+<table id=tools>
+<tr>
+<td>
+	<select id=tool>
+		<option value=0>ping</option>
+		<option value=1>traceroute</option>
+		<option value=2>host</option>
+		<option value=3>dig</option>
+		<option value=4>whois</option>
+	</select>
+	<input type=text value='IP or Host' id=host> <br />
+	<input type=submit value='Execute'>
+</td>
+</tr><tr>
+<td id=results>
+<hr />
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>
