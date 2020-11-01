@@ -6,7 +6,12 @@ use CGI qw(param);
 $ENV{PATH}='/usr/bin:/bin';
 
 sub read_exec {
-    my $result = do {
+    my $result = "\nExecuted command:\t";
+	foreach my $o(@_) {
+		$result .= ' ' . $o;
+	}
+	$result .= "\n";
+	$result .= do {
         local $/;
 		open my $cmd, '|-', @_ or die 'Error: unable to execute ' . $_[0];
         <$cmd>;
@@ -22,7 +27,7 @@ my $host = '';
 my %tools = (
 	0 => [ '/bin/ping', '-c', '5', '-w', '5' ],
 	1 => [ '/usr/bin/traceroute', '-m', '14', '-q', '1' ],
-	2 => [ '/usr/bin/host', '-t', 'any' ],
+	2 => [ '/usr/bin/host', ],
 	3 => [ '/usr/bin/dig', '+trace' ],
 	4 => [ '/usr/bin/whois' ] 
 );
