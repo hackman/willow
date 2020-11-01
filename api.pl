@@ -21,9 +21,9 @@ my $host = '';
 
 my %tools = (
 	0 => [ '/bin/ping', '-c', '5', '-w', '5' ],
-	1 => [ '/usr/bin/traceroute', '-4', '-m', '14', '-q', '1' ],
+	1 => [ '/usr/bin/traceroute', '-m', '14', '-q', '1' ],
 	2 => [ '/usr/bin/host', '-t', 'any' ],
-	3 => [ '/usr/bin/dig', '-4', '+trace' ], 
+	3 => [ '/usr/bin/dig', '+trace' ],
 	4 => [ '/usr/bin/whois' ] 
 );
 
