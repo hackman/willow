@@ -6,10 +6,30 @@
 <title> Willow network tools </title>
 
 <style>
-body { background: #fff; font-family: Tahoma, Verdana, Arial; font-size: 12px; padding: 0; margin: 0; color: #000; text-align: center; }
-a { color: #05a8de; }
-h2 { text-align: center; }
-#tools { width:80%; text-align: left;  }
+body { background: #fff; font-family: Tahoma, Verdana, Arial; font-size: 12px; padding: 0; margin: 0; color: #000; }
+#header {
+	margin: 0;
+	padding: 0;
+	height: 40px;
+	width: 100%;
+	text-align: center;
+	vertical-align: middle;
+	background-image: radial-gradient( circle 465px at -15.1% -25%,  rgba(17,130,193,1) 0%, rgba(67,166,238,1) 49%, rgba(126,203,244,1) 90.2% );
+}
+#header h2 {
+	margin: 0;
+	padding-top: 8px;
+	color: #fff;
+	text-shadow: 2px 2px 4px #8585ad;
+}
+#tools {
+	width:100%;
+	text-align: left;
+	padding-top: 10px;
+	padding-left: 20px;
+	padding-bottom: 10px;
+	background-color: #c2c2d6;
+}
 #results { text-align: left; }
 </style>
 
@@ -25,7 +45,7 @@ function do_cmd(cmd,host) {
         'url': url + 'cmd=' + cmd + '&host=' + host,
         'dataType': 'html',
         'success': function (data) {
-			$('#results').html('<hr /><pre>' + data + '</pre>');
+			$('#results').html('<pre>' + data + '</pre>');
         }
 	});
 }
@@ -37,7 +57,7 @@ function handle_net(event,key) {
 	host = $('#host').val();
 	cmd  = $('#tool').val();
 	if ($('#host').val !== '') {
-		$('#results').html('<hr /><img src="img/progress.gif" alt="Progress">');
+		$('#results').html('<img src="img/progress.gif" alt="Progress">');
 		do_cmd(cmd,host);
 	}
 }
@@ -50,6 +70,7 @@ function init_focus() {
 $(document).ready(function(){
 	init_focus();
 	$('#host').on('keypress', function(e) { handle_net(e,1) });
+	$('#tool').on('keypress', function(e) { handle_net(e,1) });
 	$('#exec').on('click', function(e) { handle_net(e,0) });
 });
 
@@ -57,8 +78,9 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
+<div id=header>
 <h2> Willow network tools </h2>
-<hr />
+</div>
 <div id=tools>
 	<select id=tool>
 		<option value=0>ping</option>
@@ -67,11 +89,10 @@ $(document).ready(function(){
 		<option value=3>dig</option>
 		<option value=4>whois</option>
 	</select>
-	<input type=text value='IP or Host' id=host> <br />
+	<input type=text value='IP or Host' size=80 id=host> <br />
 	<input type=submit value='Execute' id=exec>
 </div>
 <div id=results>
-<hr />
 </div>
 </body>
 </html>
