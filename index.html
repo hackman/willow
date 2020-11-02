@@ -23,14 +23,23 @@ body { background: #fff; font-family: Tahoma, Verdana, Arial; font-size: 12px; p
 	text-shadow: 2px 2px 4px #8585ad;
 }
 #tools {
-	width:100%;
+	margin: 0;
 	text-align: left;
 	padding-top: 10px;
 	padding-left: 20px;
 	padding-bottom: 10px;
 	background-color: #c2c2d6;
 }
-#results { text-align: left; }
+#results {
+	width: 100%;
+	text-align: left;
+}
+#results .progress {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
 </style>
 
 <script src="http://code.jquery.com/jquery.min.js" type="text/javascript"></script>
@@ -57,7 +66,7 @@ function handle_net(event,key) {
 	host = $('#host').val();
 	cmd  = $('#tool').val();
 	if ($('#host').val !== '') {
-		$('#results').html('<img src="img/progress.gif" alt="Progress">');
+		$('#results').html('<img src="img/progress.gif" class=progress alt="Progress">');
 		do_cmd(cmd,host);
 	}
 }
@@ -89,7 +98,7 @@ $(document).ready(function(){
 		<option value=3>dig</option>
 		<option value=4>whois</option>
 	</select>
-	<input type=text value='IP or Host' size=80 id=host> <br />
+	<input type=text value='IP or Host' size=80 id=host>
 	<input type=submit value='Execute' id=exec>
 </div>
 <div id=results>
