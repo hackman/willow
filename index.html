@@ -37,6 +37,14 @@ body { background: #fff; font-family: Tahoma, Verdana, Arial; font-size: 12px; p
 	padding-bottom: 10px;
 	background-color: #c2c2d6;
 }
+#protos {
+	margin: 0;
+	text-align: left;
+	padding-top: 10px;
+	padding-left: 20px;
+	padding-bottom: 10px;
+	background-color: #c2c2d6;
+}
 #results {
 	width: 100%;
 	text-align: left;
@@ -68,12 +76,12 @@ function get_ip() {
 	});
 }
 
-function do_cmd(cmd,host) {
-	// verify host and IP
+function do_call(uri) {
+	$('#results').html('<img src="img/progress.gif" class=progress alt="Progress">');
 	$.ajax({
         'async': false,
         'global': false,
-        'url': url + 'cmd=' + cmd + '&host=' + host,
+        'url': uri,
         'dataType': 'html',
         'success': function (data) {
 			$('#results').html('<pre>' + data + '</pre>');
@@ -87,9 +95,21 @@ function handle_net(event,key) {
     event.preventDefault();
 	host = $('#host').val();
 	cmd  = $('#tool').val();
-	if ($('#host').val !== '') {
-		$('#results').html('<img src="img/progress.gif" class=progress alt="Progress">');
-		do_cmd(cmd,host);
+	if (host !== '') {
+        do_call(url + 'cmd=' + cmd + '&host=' + host);
+	}
+}
+
+function handle_proto(event,key) {
+	if (key && event.which != 13)
+		return;
+    event.preventDefault();
+	host = $('#hostp').val();
+	proto  = $('#proto').val();
+	user = $('#user').val();
+	pass = $('#pass').val();
+	if (host !== '' && proto !== '' && user !== '' && pass !== '') {
+        do_call(url + 'proto=' + proto + '&host=' + host + '&user=' + user + '&pass=' + pass);
 	}
 }
 
@@ -103,6 +123,7 @@ $(document).ready(function(){
 	$('#host').on('keypress', function(e) { handle_net(e,1) });
 	$('#tool').on('keypress', function(e) { handle_net(e,1) });
 	$('#exec').on('click', function(e) { handle_net(e,0) });
+	$('#execp').on('click', function(e) { handle_proto(e,0) });
 	get_ip();
 });
 
@@ -124,6 +145,19 @@ $(document).ready(function(){
 	</select>
 	<input type=text value='IP or Host' size=80 id=host>
 	<input type=submit value='Execute' id=exec>
+</div>
+<div id=protos>
+	<select id=proto>
+		<option value=0>SMTP</option>
+		<option value=1>POP3</option>
+		<option value=2>POP3S</option>
+		<option value=3>IMAP</option>
+		<option value=4>IMAPS</option>
+	</select>
+	<input type=text value='IP or Host' size=50 id=hostp>
+	<input type=text value='Username' size=20 id=user>
+	<input type=text value='password' size=20 id=pass>
+	<input type=submit value='Test' id=execp>
 </div>
 <div id=results>
 </div>
