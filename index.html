@@ -22,6 +22,13 @@ body { background: #fff; font-family: Tahoma, Verdana, Arial; font-size: 12px; p
 	color: #fff;
 	text-shadow: 2px 2px 4px #8585ad;
 }
+#ip {
+	display: block;
+	float: left;
+	padding: 10px 0 0 10px;
+	color: #fff;
+	text-shadow: 2px 2px 4px #8585ad;
+}
 #tools {
 	margin: 0;
 	text-align: left;
@@ -40,11 +47,26 @@ body { background: #fff; font-family: Tahoma, Verdana, Arial; font-size: 12px; p
 	margin-right: auto;
 	width: 50%;
 }
+#results pre {
+	padding-left: 5px;
+}
 </style>
 
 <script src="http://code.jquery.com/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 var url = "api.pl?";
+
+function get_ip() {
+	$.ajax({
+        'async': false,
+        'global': false,
+        'url': url + 'cmd=ip',
+        'dataType': 'html',
+        'success': function (data) {
+			$('#ip').html('<b>' + data + '</b');
+        }
+	});
+}
 
 function do_cmd(cmd,host) {
 	// verify host and IP
@@ -81,6 +103,7 @@ $(document).ready(function(){
 	$('#host').on('keypress', function(e) { handle_net(e,1) });
 	$('#tool').on('keypress', function(e) { handle_net(e,1) });
 	$('#exec').on('click', function(e) { handle_net(e,0) });
+	get_ip();
 });
 
 	
@@ -88,6 +111,7 @@ $(document).ready(function(){
 </head>
 <body>
 <div id=header>
+<div id=ip></div>
 <h2> Willow network tools </h2>
 </div>
 <div id=tools>
