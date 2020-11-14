@@ -1,2 +1,2 @@
-- Make it execute the commands via gearmany sync exec
+- Make it execute the commands via gearman sync exec
 - Make the web interface pretty :)
