@@ -4,6 +4,7 @@ use warnings;
 use CGI qw(param);
 
 $ENV{PATH}='/usr/bin:/bin';
+my $VERSION = '1.0';
 
 sub read_exec {
     my $result = "\nExecuted command:\t";
@@ -35,10 +36,21 @@ my %tools = (
 $cmd  = param('cmd');
 $host = param('host');
 
-if (!defined($cmd) or !defined($host)) {
-	print "Error: missing host or cmd\n";
+if (!defined($cmd)) {
+	print "Error: missing host\n";
 	exit 0;
 }
+
+if ($cmd eq 'ip') {
+	print $ENV{'REMOTE_ADDR'};
+	exit 0;
+}
+
+if (!defined($host)) {
+	print "Error: missing host\n";
+	exit 0;
+}
+
 
 if ($cmd !~ /^[0-9]$/) {
 	print "Error: invalid cmd format\n";
