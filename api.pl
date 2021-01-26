@@ -4,7 +4,7 @@ use warnings;
 use CGI qw(param);
 
 $ENV{PATH}='/usr/bin:/bin';
-my $VERSION = '1.0';
+my $VERSION = '1.1';
 
 sub read_exec {
     my $result = "\nExecuted command:\t";
@@ -37,7 +37,7 @@ $cmd  = param('cmd');
 $host = param('host');
 
 if (!defined($cmd)) {
-	print "Error: missing host\n";
+	print "Error: missing cmd\n";
 	exit 0;
 }
 
