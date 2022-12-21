@@ -75,7 +75,8 @@ function get_ip() {
 	$.ajax({
         'async': false,
         'global': false,
-        'url': url + 'cmd=ip',
+        'url': url,
+		'data': { cmd: 'ip' },
         'dataType': 'html',
         'success': function (data) {
 			$('#ip').html('<b>' + data + '</b');
@@ -83,12 +84,19 @@ function get_ip() {
 	});
 }
 
-function do_call(uri) {
+function do_call(data) {
 	$('#results').html('<img src="img/progress.gif" class=progress alt="Progress">');
+	// Cleanup the host parameter if the paste is URL or has white spaces
+	var host = data.host;
+	host = host.replace(/https?:\/\//,'');
+	host = host.replace(/\/.*/g,'');
+	host = host.replace(/ */g,'');
+	data.host = host;
 	$.ajax({
         'async': false,
         'global': false,
-        'url': uri,
+        'url': url,
+		'data': data,
         'dataType': 'html',
         'success': function (data) {
 			$('#results').html('<pre>' + data + '</pre>');
@@ -103,7 +111,7 @@ function handle_net(event,key) {
 	host = $('#host').val();
 	cmd  = $('#tool').val();
 	if (host !== '') {
-        do_call(url + 'cmd=' + cmd + '&host=' + host);
+        do_call({cmd: cmd, host: host});
 	}
 }
 
@@ -116,7 +124,7 @@ function handle_proto(event,key) {
 	user = $('#user').val();
 	pass = $('#pass').val();
 	if (host !== '' && proto !== '' && user !== '' && pass !== '') {
-        do_call(url + 'proto=' + proto + '&host=' + host + '&user=' + user + '&pass=' + pass);
+        do_call({proto: proto, host: host, user: user, pass: pass});
 	}
 }
 
