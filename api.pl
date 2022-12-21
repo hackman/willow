@@ -30,7 +30,8 @@ my %tools = (
 	1 => [ '/usr/bin/traceroute', '-m', '14', '-q', '1' ],
 	2 => [ '/usr/bin/host', ],
 	3 => [ '/usr/bin/dig', '+trace' ],
-	4 => [ '/usr/bin/whois' ] 
+	4 => [ '/usr/bin/whois' ],
+	5 => [ '/usr/bin/host', '-t', 'NS' ]
 );
 
 $cmd  = param('cmd');
