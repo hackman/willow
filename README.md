@@ -1,4 +1,5 @@
 This is a simple web interface to the follwing commands:
+- mtr
 - ping
 - traceroute
 - host
