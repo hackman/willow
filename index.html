@@ -60,7 +60,8 @@ function get_ip() {
 	$.ajax({
         'async': false,
         'global': false,
-        'url': url + 'cmd=ip',
+        'url': url,
+		'data': { cmd: 'ip' },
         'dataType': 'html',
         'success': function (data) {
 			$('#ip').html('<b>' + data + '</b');
@@ -111,16 +112,17 @@ $(document).ready(function(){
 </head>
 <body>
 <div id=header>
-<div id=ip></div>
+<div id=ip-text>Your IP address is: </div><div id=ip></div>
 <h2> Willow network tools </h2>
 </div>
 <div id=tools>
 	<select id=tool>
-		<option value=0>ping</option>
-		<option value=1>traceroute</option>
 		<option value=2>host</option>
 		<option value=3>dig</option>
 		<option value=4>whois</option>
+		<option value=0>ping</option>
+		<option value=1>traceroute</option>
+		<option value=5>Name Servers</option>
 	</select>
 	<input type=text value='IP or Host' size=80 id=host>
 	<input type=submit value='Execute' id=exec>
