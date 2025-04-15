@@ -4,7 +4,7 @@ use warnings;
 use CGI qw(param);
 
 $ENV{PATH}='/usr/bin:/bin';
-my $VERSION = '1.0';
+my $VERSION = '1.1';
 
 sub read_exec {
     my $result = "\nExecuted command:\t";
@@ -28,16 +28,17 @@ my $host = '';
 my %tools = (
 	0 => [ '/bin/ping', '-c', '5', '-w', '5' ],
 	1 => [ '/usr/bin/traceroute', '-m', '14', '-q', '1' ],
-	2 => [ '/usr/bin/host', ],
+	2 => [ '/usr/bin/host' ],
 	3 => [ '/usr/bin/dig', '+trace' ],
-	4 => [ '/usr/bin/whois' ] 
+	4 => [ '/usr/bin/whois' ], 
+	5 => [ '/usr/bin/host', '-t', 'NS' ]
 );
 
 $cmd  = param('cmd');
 $host = param('host');
 
 if (!defined($cmd)) {
-	print "Error: missing host\n";
+	print "Error: missing cmd\n";
 	exit 0;
 }
 
