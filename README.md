@@ -24,14 +24,14 @@ chmod 755 /var/www/willow/api.pl
 ## Nginx
 Add this to your Nginx server configuration:
 ```
-        location /willow {
-				root /var/www;
-                index index.html;
-                try_files $uri $uri/ /index.html;
-                location ~ \.pl {
-                        fastcgi_pass unix:/run/fcgiwrap.socket;
-                        fastcgi_index smokeping.cgi;
-                        include fastcgi.conf;
-                }
-        }
+	location /willow {
+		root /var/www;
+		index index.html;
+		try_files $uri $uri/ /index.html;
+		location ~ \.pl {
+			fastcgi_pass unix:/run/fcgiwrap.socket;
+			fastcgi_index api.pl;
+			include fastcgi.conf;
+		}
+}
 ```
