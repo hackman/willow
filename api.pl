@@ -4,7 +4,7 @@ use warnings;
 use CGI qw(param);
 
 $ENV{PATH}='/usr/bin:/bin';
-my $VERSION = '1.1';
+my $VERSION = '1.2';
 
 sub read_exec {
     my $result = "\nExecuted command:\t";
@@ -31,7 +31,8 @@ my %tools = (
 	2 => [ '/usr/bin/host' ],
 	3 => [ '/usr/bin/dig', '+trace' ],
 	4 => [ '/usr/bin/whois' ], 
-	5 => [ '/usr/bin/host', '-t', 'NS' ]
+	5 => [ '/usr/bin/host', '-t', 'NS' ],
+	6 => [ '/usr/bin/mtr', '-u', '--report-wide', '--report-cycles', '10' ]
 );
 
 $cmd  = param('cmd');
