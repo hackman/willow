@@ -26,13 +26,13 @@ my $cmd = '';
 my $host = '';
 
 my %tools = (
-	0 => [ '/bin/ping', '-c', '5', '-w', '5' ],
-	1 => [ '/usr/bin/traceroute', '-m', '14', '-q', '1' ],
-	2 => [ '/usr/bin/host' ],
+	0 => [ '/bin/ping', '-c', '5', '-w', '5', '--' ],
+	1 => [ '/usr/bin/traceroute', '-m', '14', '-q', '1', '--' ],
+	2 => [ '/usr/bin/host', '--' ],
 	3 => [ '/usr/bin/dig', '+trace' ],
-	4 => [ '/usr/bin/whois' ], 
-	5 => [ '/usr/bin/host', '-t', 'NS' ],
-	6 => [ '/usr/bin/mtr', '-u', '--report-wide', '--report-cycles', '10' ]
+	4 => [ '/usr/bin/whois', '--' ],
+	5 => [ '/usr/bin/host', '-t', 'NS', '--' ],
+	6 => [ '/usr/bin/mtr', '-u', '--report-wide', '--report-cycles', '10', '--' ]
 );
 
 $cmd  = param('cmd');
