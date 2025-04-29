@@ -19,6 +19,10 @@ systemctl enable fcgiwrap
 systemctl start fcgiwrap nginx
 chmod 755 /var/www/willow/api.pl
 ```
+For MTR to work you would also need to add CAP_NET_RAW:
+```
+setcap cap_net_raw+ep /usr/bin/mtr-packet
+```
 
 
 ## Nginx
