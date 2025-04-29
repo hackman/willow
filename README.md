@@ -12,7 +12,7 @@ It's main purpose is to help diagnose network issues, without the requirement of
 
 ## Ubuntu
 ```
-apt-get install nginx fcgiwrap traceroute mtr bind9-host bind9-dnsutils whois iputils-ping git
+apt-get install nginx fcgiwrap libcgi-pm-perl traceroute mtr bind9-host bind9-dnsutils whois iputils-ping git
 cd /var/www
 git clone https://github.com/hackman/willow.git
 systemctl enable fcgiwrap
