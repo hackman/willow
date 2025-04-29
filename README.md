@@ -10,6 +10,8 @@ It's main purpose is to help diagnose network issues, without the requirement of
 
 # Installation
 
+Installation should be done as root
+
 ## Ubuntu
 ```
 apt-get install nginx fcgiwrap libcgi-pm-perl traceroute mtr bind9-host bind9-dnsutils whois iputils-ping git
@@ -24,7 +26,6 @@ For MTR to work you would also need to add CAP_NET_RAW:
 setcap cap_net_raw+ep /usr/bin/mtr-packet
 ```
 
-
 ## Nginx
 Add this to your Nginx server configuration:
 ```
@@ -37,5 +38,5 @@ Add this to your Nginx server configuration:
 			fastcgi_index api.pl;
 			include fastcgi.conf;
 		}
-}
+	}
 ```
