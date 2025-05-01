@@ -129,6 +129,14 @@ function handle_proto(event,key) {
 	}
 }
 
+function copy_ip() {
+	var temp = $('<input>');
+	$('body').append(temp);
+	temp.val($('#ip').text()).select();
+	document.execCommand("copy");
+	temp.remove();
+}
+
 function init_focus() {
 	$('#host').focusout(function() { if ($('#host').val() === '') $('#host').val('IP or Host') });
 	$('#host').focus(function() { $('#host').val('') });
