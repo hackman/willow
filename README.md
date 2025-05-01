@@ -1,12 +1,16 @@
-This is a simple web interface to the follwing commands:
+This is a [looking glass](https://en.wikipedia.org/wiki/Looking_Glass_server) like interface aimed to provide access to network tools over the web, without requiring
+you to login over shell.
+
+Initially it was build to allow people without shell access to diagnose network issues from the server to
+different destinations.
+
+Currently this simple web interface provides access to the follwing commands:
 - mtr
 - ping
 - traceroute
 - host
 - dig
 - whois
-
-It's main purpose is to help diagnose network issues, without the requirement of a shell on the machine.
 
 # Installation
 
