@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/d7a102e5-0d8d-4ad8-8b43-b377bc249407)
+
 This is a [looking glass](https://en.wikipedia.org/wiki/Looking_Glass_server) like interface aimed to provide access to network tools over the web, without requiring
 you to login over shell.
 
