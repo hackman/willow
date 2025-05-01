@@ -1,7 +1,6 @@
 - Make it execute the commands via gearman sync exec
 - Make the web interface pretty :)
 - Automatically create a dropdown menu items with the last 10, previously queried IPs/Hosts.
-- Add a copy/paste icon to the IP
 - Clicking on the IP should automatically run the currently selected tool with the IP
 - Improve the url handling in do_call() JS function
 - Finish the protocol checks, to allow credentials validation and make sure the checks are only allowed when the page is loaded over HTTPS.
