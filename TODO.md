@@ -4,3 +4,11 @@
 - Improve the url handling in do_call() JS function
 - Finish the protocol checks, to allow credentials validation and make sure the checks are only allowed when the page is loaded over HTTPS.
 - Theme support and Dark Theme for Willow
+- Add mail checks
+  - SPF DNS record and validation
+  - MTA-STS record and validation
+  - DKIM record and validation
+  - DMARC record and validation
+  - TLSREC record and validation
+- Check SSL cert validity
+- Get the TLD name servers using dig +trace magic
