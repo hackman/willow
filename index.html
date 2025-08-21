@@ -71,6 +71,88 @@ input, select {
 	margin-top: 6px;
 	margin-left: 5px;
 }
+
+/* Fancy Loading Screen */
+.wlw-hidden { display: none !important; }
+#wlw-loader {
+	position: fixed; inset: 0; z-index: 9999;
+	display: grid; place-items: center;
+	background:
+		radial-gradient(1200px 800px at 20% 10%, rgba(100,200,255,.10), transparent 60%),
+		radial-gradient(1000px 600px at 80% 90%, rgba(180,120,255,.10), transparent 60%),
+		rgba(13,17,23,.85);
+	backdrop-filter: blur(3px);
+	color: #e6edf3;
+}
+#wlw-loader[aria-hidden="true"] { display: none; }
+.wlw-card {
+	width: min(640px, 92vw);
+	border-radius: 28px;
+	padding: 28px 28px 24px;
+	background: rgba(255,255,255,.035);
+	box-shadow: 0 10px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+	border: 1px solid rgba(255,255,255,.08);
+}
+.wlw-head {
+	display: flex; align-items: center; gap: 16px; margin-bottom: 10px;
+}
+/* spinner */
+.wlw-spin {
+	width: 28px; height: 28px; border-radius: 999px;
+	border: 3px solid rgba(255,255,255,.18);
+	border-top-color: rgba(255,255,255,.9);
+	animation: wlw-rot 1s linear infinite;
+	flex: 0 0 auto;
+}
+@keyframes wlw-rot { to { transform: rotate(360deg); } }
+/* “Willow” wordmark with shimmer */
+.wlw-title {
+	font: 700 26px/1.1 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+	letter-spacing: .3px;
+	background: linear-gradient(92deg, #c3e7ff, #ffffff, #d5c2ff);
+	background-size: 200% 100%;
+	-webkit-background-clip: text; background-clip: text; color: transparent;
+	animation: wlw-shimmer 2.6s ease-in-out infinite;
+}
+@keyframes wlw-shimmer {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
+}
+.wlw-subtle { color: #9da7b3; font-size: 14px; }
+.wlw-body { margin-top: 10px; }
+.wlw-pulse { animation: wlw-pulse 1.8s ease-in-out infinite; }
+@keyframes wlw-pulse {
+	0%,100% { opacity: .55; }
+	50% { opacity: 1; }
+}
+.wlw-hints {
+	margin-top: 14px; border-top: 1px dashed rgba(255,255,255,.12);
+	padding-top: 14px; display: flex; align-items: center; gap: 10px;
+	min-height: 28px;
+}
+.wlw-dot {
+	width: 8px; height: 8px; border-radius: 999px;
+	background: rgba(133, 212, 255, .9);
+	box-shadow: 0 0 12px rgba(133, 212, 255, .8);
+	animation: wlw-bounce 1.6s ease-in-out infinite;
+}
+@keyframes wlw-bounce {
+	0%,100% { transform: translateY(0); }
+	50% { transform: translateY(-3px); }
+}
+.wlw-hint-text {
+	font-size: 15px; color: #c7d1dc;
+	white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Respect users that prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+	.wlw-spin, .wlw-title, .wlw-pulse, .wlw-dot { animation: none !important; }
+}
+
+#wlw-loader { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; /* ...rest... */ }
+#wlw-loader[aria-hidden="true"] { display: none; } /* hide only via aria-hidden */
+
 </style>
 
 <script src="//code.jquery.com/jquery.min.js" type="text/javascript"></script>
@@ -92,23 +174,26 @@ function get_ip() {
 	});
 }
 
-function do_call(data) {
-	$('#results').html('<img src="img/progress.gif" class=progress alt="Progress">');
+async function do_call(data) {
+	$('#results').html('<pre></pre>');
 	var host = data.host;
 	host = host.replace(/https?:\/\//,'');
 	host = host.replace(/\/.*/g,'');
 	host = host.replace(/ */g,'');
 	data.host = host;
-	$.ajax({
-        'async': false,
-        'global': false,
-        'url': url,
-		'data': data,
-        'dataType': 'html',
-        'success': function (data) {
-			$('#results').html('<pre>' + data + '</pre>');
-        }
-	});
+	try {
+		const tool = $('#tool').find(":selected").text();
+		const params = new URLSearchParams(data).toString();
+		const res = await withLoadingScreen(
+			() => fetch(`${url}${params}`, { method: 'GET' }),
+			{ start: `Running ${tool}…`, during: 'Rendering results…' }
+		);
+
+		const text = await res.text();
+		$('#results').html('<pre>' + text + '</pre>');
+	} catch (err) {
+		$('#results').html('<pre>' + (err && err.message) ? err.message : 'Request failed' + '</pre>');
+	}
 }
 
 function handle_net(event,key) {
@@ -158,10 +243,90 @@ $(document).ready(function(){
 	get_ip();
 });
 
+jQuery(function ($) {
+	// Build once, expose globally
+	const hints = [
+		'Traceroute network paths...',
+		'Get whois data',
+		'Resolv DNS entries...',
+		'Check connectivity using ping or mtr...'
+	];
+
+	const api = (function () {
+	const $root = $('#wlw-loader');
+	const $line = $('#wlw-loader-line');
+	const $hint = $('#wlw-hint');
+	let hintIdx = 0, rot = null;
 	
+	function show(msg = 'Working…') {
+		if (!$root.length) { return; }
+		$line.text(msg);
+		$root.attr('aria-hidden', 'false'); // visible via CSS: #wlw-loader[aria-hidden="true"] { display:none }
+		clearInterval(rot);
+		hintIdx = Math.floor(Math.random() * hints.length);
+		$hint.text(hints[hintIdx]);
+		rot = setInterval(() => {
+		  hintIdx = (hintIdx + 1) % hints.length;
+		  $hint.text(hints[hintIdx]);
+		}, 2000);
+	}
+	function message(msg) { $line.text(msg); }
+	function hide() { clearInterval(rot); if ($root.length) $root.attr('aria-hidden', 'true'); }
+
+	return { show, message, hide };
+	})();
+
+	// EXPOSE GLOBALLY
+	window.WillowLoader = api;
+
+	// Also expose wrapper globally
+	window.withLoadingScreen = async function (promiseFactory, opts = {}) {
+		const { start = 'Contacting API…', during = 'Processing response…' } = opts;
+		window.WillowLoader.show(start);
+		try {
+			const res = await promiseFactory();
+			window.WillowLoader.message(during);
+			return res;
+		} finally {
+			setTimeout(() => window.WillowLoader.hide(), 250);
+		}
+	};
+});
+
+// Wrap any async call with loading screen
+async function withLoadingScreen(promiseFactory, { start = 'Contacting API…', during = 'Processing response…' } = {}) {
+	WillowLoader.show(start);
+	try {
+		const res = await promiseFactory();
+		WillowLoader.message(during);
+		return res;
+	} finally {
+		// hide after a slight delay so user sees "Rendering…" briefly
+		setTimeout(() => WillowLoader.hide(), 250);
+	}
+}
 </script>
 </head>
 <body>
+
+<!-- Fancy Loading Screen -->
+<div id="wlw-loader" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true">
+  <div class="wlw-card" aria-label="Loading">
+    <div class="wlw-head">
+      <div class="wlw-spin" aria-hidden="true"></div>
+      <div class="wlw-title">Willow</div>
+    </div>
+    <div class="wlw-body">
+      <div id="wlw-loader-line" class="wlw-subtle wlw-pulse">Preparing tools…</div>
+      <div class="wlw-hints">
+        <div class="wlw-dot" aria-hidden="true"></div>
+        <div class="wlw-hint-text">You can use this tool to:</div>
+        <div id="wlw-hint" class="wlw-hint-text">Running diagnostics…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id=header>
 	<div id=ip-text>Your IP address is: </div><div id=ip></div><a href='javascript:copy_ip()' id=copy><img src='img/clipboard.png' width=20></a>
 <h2> Willow network tools </h2>
