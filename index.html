@@ -86,8 +86,8 @@ function get_ip() {
         'dataType': 'html',
         'success': function (data) {
 			$('#ip').html('<b>' + data + '</b');
-			$('#host').value(data);
-			$('#hostp').value(data);
+			$('#host').val(data);
+			$('#hostp').val(data);
         }
 	});
 }
