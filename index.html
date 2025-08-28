@@ -272,7 +272,7 @@ $(document).ready(function(){
 	$('#tool').on('keypress', function(e) { handle_net(e,1) });
 	$('#exec').on('click', function(e) { handle_net(e,0) });
 	$('#execp').on('click', function(e) { handle_proto(e,0) });
-	$('#ip').on('click', function(e) { do_call({ cmd: $('#tool').val(), host: $('#ip').text() }); });
+	$('#ip').on('click', function(e) { $('#host').val($('#ip').text()); do_call({ cmd: $('#tool').val(), host: $('#ip').text() }); });
 	get_ip();
 });
 
